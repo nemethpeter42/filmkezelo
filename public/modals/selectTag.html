@@ -1,0 +1,11 @@
+﻿<div class='modal-header'>
+	<h3 class='modal-title' id='modal-title'>Tag kiválasztása</h3>
+</div>
+<div class='modal-body container-fluid'>
+	<div class='col-lg-12'>
+		<span ng-repeat='x in $ctrl.tags'><a ng-click='$ctrl.select(x)' class='btn btn-default' ng-class='$ctrl.classTag(x)'>{{x}}</a>&#32;</span>
+	</div>
+</div>
+<div class='modal-footer'>
+	<button class='btn btn-primary' type='button' ng-click='$ctrl.close()'>Bezár</button>
+</div>

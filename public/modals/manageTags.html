@@ -1,0 +1,22 @@
+﻿<div class='modal-header'>
+	<h3 class='modal-title' id='modal-title'>Tag-ek kezelése</h3>
+</div>
+<div class='modal-body container-fluid'>
+	<div uib-alert ng-repeat='alert in $ctrl.alerts' ng-class='"alert-" + (alert.type || "danger")' close='$ctrl.closeAlert($index)'>{{alert.msg}}</div>
+	<div class='form-group col-lg-4'>
+		<label class='control-label'>Egyéb:</label>
+		<div class='input-group'>
+			<input class='form-control' ng-model='$ctrl.inputField' type='text'>
+			<span class='input-group-btn'>
+				<!--no need to trim text, angular automatically does it-->
+				<button class='btn btn-default' type='button' ng-class='$ctrl.inputField!==""?"":"disabled"' ng-click='$ctrl.inputField===""||$ctrl.createOrRemove($ctrl.inputField)'>Hozzáad</button>
+			</span>
+		</div>
+	</div>
+	<div class='col-lg-12'>
+		<span ng-repeat='x in $ctrl.tags'><a ng-click='$ctrl.createOrRemove(x)' class='btn' ng-class='$ctrl.classTag(x)'>{{x}}</a>&#32;</span>
+	</div>
+</div>
+<div class='modal-footer'>
+	<button class='btn btn-primary' type='button' ng-click='$ctrl.close()'>Bezár</button>
+</div>

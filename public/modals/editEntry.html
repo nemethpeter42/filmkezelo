@@ -1,0 +1,48 @@
+﻿<div class='modal-header'>
+	<h2 class='modal-title' id='modal-title'>Bejegyzés létrehozása / módosítása</h2>
+</div>
+<div class='modal-body container-fluid'>
+	<div uib-alert ng-repeat='alert in $ctrl.alerts' ng-class='"alert-" + (alert.type || "danger")' close='$ctrl.closeAlert($index)'>{{alert.msg}}</div>
+	<div class='form-group col-lg-6'>
+		<label class='control-label'>Eredeti cím</label>
+		<input class='form-control' ng-model='$ctrl.entryForPosting.orig' type='text'>
+	</div>
+	<div class='form-group col-lg-6'>
+		<label class='control-label'>Magyar cím</label>
+		<input class='form-control' ng-model='$ctrl.entryForPosting.hun' type='text'>
+	</div>
+	<div class='form-group col-lg-6'>
+		<label class='control-label'>Precedencia</label>
+		<div class='radio' ng-repeat='elem in [null,1,2,3]'>
+			<label>
+				<input ng-value='elem' ng-model='$ctrl.entryForPosting.prec' type='radio'>
+				<span ng-class='classPrec(elem)'>
+					{{elem!==null?textPrec(elem):'(nincs kitöltve)'}}
+				</span>
+			</label>
+		</div>
+	</div>
+	<div class='form-group col-lg-6'>
+		<label class='control-label'>Hányszor láttam</label>
+		<div class='radio' ng-repeat='elem in [null,1,2,3]'>
+			<label>
+				<input ng-value='elem' ng-model='$ctrl.entryForPosting.seen' type='radio'>
+				<span ng-class='classSeen(elem)'>
+					{{elem!==null?textSeen(elem):'(nem néztem még)'}}
+				</span>
+			</label>
+		</div>
+	</div>
+	<div class=' col-lg-6'>
+		<p>
+			<label class='control-label'>Csillagozás</label>
+			<span class='btn btn-xs glyphicon glyphicon-trash' ng-click='$ctrl.setStars(null)' ng-class='$ctrl.entryForPosting.rating!==null?"btn-danger":"disabled btn-default"'></span>
+		</p>
+		<span ng-repeat='i in [1,2,3,4,5,6,7,8,9,10]' ng-class='$ctrl.classStars(i)' class='clickable' ng-mouseover='$ctrl.markStars(i)' ng-mouseleave='$ctrl.resetStars()' ng-click='$ctrl.setStars(i)'>★</span>
+		{{$ctrl.stars!==null?$ctrl.stars:'-'}}
+	</div>
+</div>
+<div class='modal-footer'>
+	<button class='btn btn-primary' type='button' ng-click='$ctrl.save()'>Mentés</button>
+	<button class='btn btn-default' type='button' ng-click='$ctrl.cancel()'>Mégse</button>
+</div>

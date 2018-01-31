@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang='hu' >
+
+<head>	
+	<title>Filmkezelő</title>
+	<script src='./jquery-3.2.1.min.js'></script>
+	<script src='./papaparse.min.js'></script>
+	<link rel='stylesheet' href='./bootstrap-3.3.7-darkly/css/bootstrap.min.css' type='text/css'/>
+	<script src='./bootstrap-3.3.7-darkly/js/bootstrap.min.js'></script>
+	<script src='./angular.min.js'></script>
+	<script src='./angular-animate.min.js'></script>
+	<script src='./angular-sanitize.min.js'></script>
+	<script src='./ui-bootstrap-tpls-2.5.0.min.js'></script>
+	<script src='./underscore.min.js'></script>
+	<script src='./filmkezelo.js'></script>
+	<script src='modals/details.js'></script>
+	<script src='modals/editComment.js'></script>
+	<script src='modals/editEntry.js'></script>
+	<script src='modals/manageLocations.js'></script>
+	<script src='modals/manageTags.js'></script>
+	<script src='modals/newComment.js'></script>
+	<script src='modals/newEntry.js'></script>
+	<script src='modals/removeWarning.js'></script>
+	<script src='modals/selectLocation.js'></script>
+	<script src='modals/selectTag.js'></script>
+	<script src='filters/customOrderBy.js'></script>
+	<script src='filters/locationSelect.js'></script>
+	<script src='filters/startFrom.js'></script>
+	<script src='filters/tagSelect.js'></script>
+	<script src='filters/titleSearch.js'></script>
+	<script src='filters/toArray.js'></script>
+	<meta charset='utf-8'/>
+	<link href='filmkezelo.css' rel='stylesheet'>
+</head>
+
+<body ng-app='myApp' ng-controller='myCtrl'>
+	<nav class='navbar navbar-default navbar-fixed-top'>
+		<div class='container-fluid'>
+			<div class='navbar-header'>
+				<button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#bs-example-navbar-collapse-1'>
+					<span class='sr-only'>Toggle navigation</span>
+					<span class='icon-bar'></span>
+					<span class='icon-bar'></span>
+					<span class='icon-bar'></span>
+				</button>
+			</div>
+			<div class='collapse navbar-collapse' id='bs-example-navbar-collapse-1'>
+				<div class='nav navbar-nav navbar-left' >
+					<li><span uib-pagination ng-click='moveToTop()' class='pagination-sm'
+					total-items='filteredEntries.length' max-size='maxSize' items-per-page='pageSize' num-pages='numPages'
+					ng-model='currentPage' boundary-links='true' first-text='❘◄' previous-text='◄' next-text='►' last-text='►❘' rotate='true'></span></li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>{{pageSize}} db / oldal<span class='caret'></span></a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Bejegyzések száma egy oldalon</a>
+							</li>
+							<li ng-repeat='elem in [10,25,50,75,100]' ng-class='pageSize===elem?"active":""'>
+								<a class='clickable' ng-click='setPageSize(elem)'>{{elem}}</a>
+							</li>
+							<li class='divider'></li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>Oszlopok<span class='caret'></span></a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Oszlopok megjelenítése</a>
+							</li>
+							<li ng-repeat='elem in keys'>
+								<a class='clickable' ng-click='changeVisibility(elem.name)'>
+									<span ng-show='visible[elem.name]===true'>✔</span>
+									{{elem.label}}
+								</a>
+							</li>
+							<li class='divider'></li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>
+							Precedencia<span class='caret'></span>
+							<span class='btn btn-danger btn-xs' ng-show='filterPrec!==undefined' ng-click='setFilterPrec(undefined);$event.stopPropagation()'><b>X</b></span>
+						</a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Szűrés precedenciára</a>
+							</li>
+							<li ng-repeat='elem in [undefined,null,1,2,3]' ng-class='filterPrec===elem?"active":""'>
+								<a class='clickable' ng-click='setFilterPrec(elem)'>{{elem!==null?textPrec(elem):'(nincs kitöltve)'}}</a>
+							</li>
+							<li class='divider'></li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>
+							Megtekintések<span class='caret'></span>
+							<span class='btn btn-danger btn-xs' ng-show='filterSeen!==undefined' ng-click='setFilterSeen(undefined);$event.stopPropagation()'><b>X</b></span>
+						</a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Szűrés megtekintések számára</a>
+							</li>
+							<li ng-repeat='elem in [undefined,null,1,2,3]' ng-class='filterSeen===elem?"active":""'>
+								<a class='clickable' ng-click='setFilterSeen(elem)'>
+									{{elem!==null?textSeen(elem):'(nincs kitöltve)'}}
+								</a>
+							</li>
+							<li class='divider'></li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>
+							Hely<span class='caret'></span>
+							<span class='btn btn-danger btn-xs' ng-show='filterLocation!==undefined' ng-click='setFilterLocation(undefined);$event.stopPropagation()'><b>X</b></span>
+						</a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Szűrés tárolási hely alapján</a>
+							</li>
+							<li ng-repeat='(k,v) in locationIndex' ng-class='filterLocation===k?"active":""'>
+								<a class='clickable' ng-click='setFilterLocation(k)'>
+									{{textLocation(k)}}
+								</a>
+							</li>
+							<li class='divider'></li>
+							<li>
+								<a class='clickable' ng-click='hlLocModeChange()'>
+									<span ng-show='hlLocMode===true'>✔</span>
+									Kiemelés szűrés helyett
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>
+							Tag<span class='caret'></span>
+							<span class='btn btn-danger btn-xs' ng-show='flt1stTag||flt2ndTag' ng-click='reset1stTag();reset2ndTag();$event.stopPropagation()'><b>X</b></span>
+						</a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Szűrés akár 2 tag alapján</a>
+							</li>	
+							<li>
+								<a class='clickable'>
+									<span ng-hide='flt1stTag' ng-click='select1stTag()'>
+										Tag kiválasztása #1
+									</span>
+									<span ng-show='flt1stTag' ng-click='reset1stTag()'>
+										Visszavonás (#1): {{flt1stTag}}
+									</span>
+								</a>
+							</li>
+							<li class='divider'></li>
+							<li>
+								<a class='clickable'>
+									<span ng-hide='flt2ndTag' ng-click='select2ndTag()'>
+										Tag kiválasztása #2
+									</span>
+									<span ng-show='flt2ndTag' ng-click='reset2ndTag()'>
+										Visszavonás (#2): {{flt2ndTag}}
+									</span>
+								</a>
+							</li>
+							<li>
+								<a class='clickable' ng-click='hlTagModeChange()'>
+									<span ng-show='hlTagMode===true'>✔</span>
+									Kiemelés szűrés helyett
+								</a>
+							</li>
+						</ul>							
+					</li>
+					<li class='dropdown'>
+						<a class='dropdown-toggle clickable' data-toggle='dropdown' role='button' aria-expanded='true'>
+							Kijelöl<span ng-show='markedIds.size>0'>&nbsp;({{markedIds.size}})</span><span class='caret'></span>
+						</a>
+						<ul class='dropdown-menu' role='menu'>
+							<li class='disabled'>
+								<a class='clickable'>Kötegelt műveletek kijelöléssel</a>
+							</li>	
+							<li>
+								<a class='clickable' ng-click='markAll()'>
+									Minden kijelölése
+								</a>
+							</li>
+							<li ng-class='markedIds.size>0?"":"disabled"'>
+								<!--
+									workaround for disabling buttons, as Bootstrap theme only makes them gray,
+									and disables the href attribute.
+									to disable even ng-click, you need to set an OR logic,
+									the first condition needs to be the condition when the button is disabled
+									so the second condition (which is your function) is only checked, when
+									the first isn't true (because of short-circuit evaluation).
+								-->
+								<a class='clickable' ng-click='markedIds.size===0||markNone()'>
+									Kijelölések megszüntetése
+								</a>
+							</li>
+							<li class='divider'></li>
+							<li ng-class='markedIds.size>0?"":"disabled"'>
+								<a class='clickable' ng-click='markedIds.size===0||batchAddTag()'>
+									Tag hozzáadása
+								</a>
+							</li>
+							<li ng-class='markedIds.size>0?"":"disabled"'>
+								<a class='clickable' ng-click='markedIds.size===0||batchRemoveTag()'>
+									Tag eltávolítása
+								</a>
+							</li>
+							<li ng-class='markedIds.size>0?"":"disabled"'>
+								<a class='clickable' ng-click='markedIds.size===0||batchAddLocation()'>
+									Tárolási hely hozzáadása
+								</a>
+							</li>
+							<li ng-class='markedIds.size>0?"":"disabled"'>
+								<a class='clickable' ng-click='markedIds.size===0||batchRemoveLocation()'>
+									Tárolási hely eltávolítása
+								</a>
+							</li>
+						</ul>							
+					</li>
+				</div>
+				<form class='navbar-form navbar-left' role='search'>
+					<div class='form-group'>
+						<input class='form-control' placeholder='Szűrés címre' type='text' ng-model='filterTitle'>
+							<span class='btn btn-danger btn-xs' ng-show='filterTitle!==""' ng-click='resetFilterTitle();$event.stopPropagation()'><b>X</b></span>
+						</input>
+					</div>
+				</form>
+				<div class='nav navbar-nav navbar-left'>
+					
+				</div>
+				<div class='nav navbar-nav navbar-right'>
+					<li>
+						<a class='clickable' ng-click='newEntry()'>+ Új</a>
+					</li>
+					<!--
+					<li>
+						<a class='clickable' ng-click='editModeChange()'>
+							<b>
+								<span class='text-warning' ng-hide='editMode'>☐</span>
+								<span class='text-success' ng-show='editMode'>☑</span>
+							</b>
+							Szerkesztés
+						</a>
+					</li>
+					-->
+				</div>
+			</div>
+		</div>
+	</nav>
+	
+	<!-- 
+		Place reservation for modal, otherwise it messes up the Bootstrap table as it opens. 
+	-->
+	<div id='modal-details-anchor'></div>
+	<div id='modal-edit-comment-anchor'></div>
+	<div id='modal-edit-entry-anchor'></div>
+	<div id='modal-manage-locations-anchor'></div>
+	<div id='modal-manage-tags-anchor'></div>
+	<div id='modal-remove-warning-anchor'></div>
+	<div id='modal-select-location-anchor'></div>
+	<div id='modal-select-tag-anchor'></div>
+	
+	<table class='table table-striped table-hover'>
+		<tr>
+			<td></td>
+			<td ng-repeat='y in ::keys' ng-show='visible[y.name]'>
+				<span class='btn btn-link' ng-click='sortBy(y.name)'>
+					{{ y.label }}
+					<span ng-show='propertyName===y.name'>
+						<span ng-hide='reverse'>▲</span>
+						<span ng-show='reverse'>▼</span>
+					</span>
+				</span>
+			</td>
+		</tr>
+		
+		<!--
+			be careful to put ordering before pagination, otherwise it will order locally on current page
+		-->
+		<tr 
+			ng-repeat='x in currentPageEntries track by x.entry_id' 
+			ng-click='openModalDetails(x)'
+		>
+			<td ng-class='highlightEntry(x.entry_id)?"info":""'>
+				<!--
+					display:flex fixes a minor bug in btn-group as it divides into two parts on small screen width
+				-->
+				<span class='btn-group' style='display:flex'>
+					<span class='btn btn-xs glyphicon' ng-class='markedIds.has(x.entry_id)?"btn-success glyphicon-check":"btn-default glyphicon-unchecked"' ng-click='markEntry(x.entry_id);$event.stopPropagation()'></span>
+					<span class='btn btn-warning btn-xs glyphicon glyphicon-pencil' ng-click='editEntry(x.entry_id);$event.stopPropagation()'></span>
+					<span class='btn btn-danger btn-xs glyphicon glyphicon-trash' ng-click='removeEntry(x.entry_id);$event.stopPropagation()'></span>
+				</span>
+			</td>
+			<!--angular one-time binding-->
+			<td ng-show='visible.entry_id'>
+				{{ ::x.entry_id }}
+			</td>
+			<td ng-show='visible.orig' class='col-lg-3'>
+				{{ x.orig }}
+			</td>
+			<td ng-show='visible.hun' class='col-lg-3'>
+				{{ x.hun }}
+			</td>
+			<td ng-show='visible.prec'>
+				<span ng-class='classPrec(x.prec)'>
+					{{ textPrec(x.prec) }}
+				</span>
+			</td>
+			<td ng-show='visible.rating'>
+				<span class='stars'><span class='stars-marked'>{{'★'.repeat(x.rating)}}</span>{{'★'.repeat(10-x.rating)}}</span>{{x.rating}}
+			</td>
+			<td ng-show='visible.seen'>
+				<span ng-class='classSeen(x.seen)'>
+					{{ textSeen(x.seen) }}
+				</span>
+			</td>
+			<td ng-show='visible.tag_cnt'>
+				{{ x.tag_cnt }}
+			</td>
+			<td ng-show='visible.cmnt_cnt'>
+				{{ x.cmnt_cnt }}
+			</td>
+		</tr>
+	</table>
+</body>
+</html> 

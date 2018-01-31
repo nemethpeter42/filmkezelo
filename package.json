@@ -1,0 +1,17 @@
+{
+  "name": "filmkezelo",
+  "version": "1.0.0",
+  "description": "Filmek nyilvantartása MySQL segítségével",
+  "main": "server.js",
+  "author": "Németh Péter",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dateformat": "^3.0.2",
+    "express": "^4.16.0",
+    "nedb": "^1.8.0",
+    "node-zip": "^1.1.1",
+    "papaparse": "^4.3.6"
+  }
+}

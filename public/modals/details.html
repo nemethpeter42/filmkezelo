@@ -1,0 +1,80 @@
+﻿<div class='modal-header'>
+	<h2 class='modal-title'>Film adatai</h2>
+</div>
+<div class='modal-body'>
+	<p>
+		<b>Eredeti cím:</b>
+		{{$ctrl.entry.orig!==null?$ctrl.entry.orig:'(nincs megadva)'}}
+	</p>
+	<p>
+		<b>Magyar cím:</b>
+		{{$ctrl.entry.hun!==null?$ctrl.entry.hun:'(nincs megadva)'}}
+	</p>
+	<div class='panel panel-default'>
+		<div class='panel-heading clearfix'>
+			<div class='panel-title pull-left'>Tagek:</div>
+			<div class='pull-right'>
+				<div class='btn btn-primary btn-sm' ng-click='$ctrl.manageTags()'>Szerkesztés</div>
+			</div>
+		</div>
+		<div class='panel-body'>
+			<!--
+			&#32; :           breaking space needed between labels, otherwhise they collide
+			track by $index : always use it in ng-repeat, otherwise it won't accept duplicates in the array
+			-->
+			<span ng-repeat='elem in $ctrl.sortedTags'>
+				<span class='label label-info'>{{elem}}</span>
+			</span>
+		</div>
+	</div>
+	<div class='panel panel-default'>
+		<div class='panel-heading clearfix'>
+			<div class='panel-title pull-left'>Tárolási helyek:</div>
+			<div class='pull-right'>
+				<div class='btn btn-primary btn-sm' ng-click='$ctrl.manageLocations()'>Szerkesztés</div>
+			</div>
+		</div>
+		<div class='panel-body'>
+			<!--
+			&#32; :           breaking space needed between labels, otherwhise they collide
+			track by $index : always use it in ng-repeat, otherwise it won't accept duplicates in the array
+			-->
+			<span ng-repeat='elem in $ctrl.sortedLocations'>
+				<span class='label label-default'>{{elem}}</span>
+			</span>
+		</div>
+	</div>
+	<h3>Kommentek:</h3>
+	<div class='panel panel-primary' ng-repeat='elem in $ctrl.sortedComments'>
+		<div class='panel-heading'>
+			<h4 class='panel-title clearfix'>
+				<span ng-show='elem.type==="problem"' class='label label-warning'>
+					probléma
+				</span>
+				<span style='float:right'>
+					<i>({{elem.created_at}})</i>
+					<span class='btn btn-warning btn-sm glyphicon glyphicon-pencil' ng-click='$ctrl.editComment(elem)'></span>
+					<span class='btn btn-danger btn-sm glyphicon glyphicon-trash' ng-click='$ctrl.removeComment(elem.created_at)'></span>
+				</span>
+			</h4>
+		</div>
+		<div class='panel-body'>
+			<span class='text-warning'>
+				<!-- 
+					i'm missing a proper replaceAll() command from JS
+					replace uses some weird kind of syntax, for RegEx:
+					
+					str.replace(/(?:\r\n|\r|\n)/g, '<br />')
+					
+					,that angular doesn't seem to like (gives lexical error),
+					so i found this workaround instead
+				-->
+				<h4 class='comment-zone' ng-bind-html='elem.content.split("\n").join("<br>")'></h4>
+			</span>
+		</div>
+	</div>
+	<div class='btn btn-primary btn-sm' ng-click='$ctrl.newComment()'>Új komment</div>
+</div>
+<div class='modal-footer'>
+	<button class='btn btn-primary' type='button' ng-click='$ctrl.close()'>Bezár</button>
+</div>

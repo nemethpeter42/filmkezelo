@@ -1,0 +1,51 @@
+﻿/* 
+	official quick fix for Bootstrap fixed-top navbar overlapping
+	i still left some space, as the navbar splits into two parts, when reducing screen width
+*/
+body { 
+	padding-top: 180px; 
+}
+
+/* 
+	one of my favourites for creating monospace documentations
+*/
+pre {
+	white-space: pre-wrap;
+}
+
+.stars {
+	color:lightblue
+}
+
+.stars-marked {
+	color:orange
+}
+
+.navbar-default .navbar-nav > li:not(.disabled) > a:hover, .navbar-default .navbar-nav > li:not(.disabled) > a:focus {
+	color: white;
+}
+
+td > .btn-link, td > .btn-link:hover, td > .btn-link:focus{
+	color:gold;
+	font-weight: bold;
+}
+
+.clickable{
+	cursor: pointer;
+}
+
+.comment-zone{
+	font-family:serif;
+	font-weight:bold;
+}
+/*
+	it's hard to override bootstrap, but sometimes it works without adding !important
+*/
+.label-danger.glyphicon{
+	display:inline-block;
+}
+
+.top-tag{
+	font-weight:bold;
+	text-decoration:underline;
+}
