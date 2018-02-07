@@ -16,11 +16,14 @@ A back-end szerver az adatok perzisztens tárolásávat végzi, ami egy egyszer�
 A front-end szerverrel JSON formátumba csomagolt JavaScript objektumokkal kommunikál a feladat típusa és az érintett tábla neve alapján kialakított végpontokon. A feladatok az alábbiak lehetnek:
 + backup (biztonsági mentés, exportálás CSV-be)
 + létrehozás
-..* film (*entry* vagyis bejegyzés)
-....- komment (*comment*)
-....- címke vagy *tag*
-....- tárolási hely
-+
+	* film (*entry* vagyis bejegyzés) és ennek altáblái:
+		- komment (*comment*)
+		- címke vagy *tag*
+		- tárolási hely (*location*)
++ szerkesztés
+	* filmbejegyzés és komment szerkeszthető
++ törlés
+	* az összes táblára van végpont
 
 A szkript fájlok a `public` könyvtárban helyezkednek el. 
 
