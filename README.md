@@ -14,6 +14,13 @@ A front-end és a back-end szerver Node.js segítségével indítható el `node 
 A back-end szerver az adatok perzisztens tárolásávat végzi, ami egy egyszerű memória-alapú *NeDB* nevű adatbáziskezelő modullal történik. Az adatbázis a gyökérkönyvtárban elhelyezkedő `database.db` nevű fájlban található.
 
 A front-end szerverrel JSON formátumba csomagolt JavaScript objektumokkal kommunikál a feladat típusa és az érintett tábla neve alapján kialakított végpontokon. A feladatok az alábbiak lehetnek:
++ backup (biztonsági mentés, exportálás CSV-be)
++ létrehozás
+..* film (*entry* vagyis bejegyzés)
+....- komment (*comment*)
+....- címke vagy *tag*
+....- tárolási hely
++
 
 A szkript fájlok a `public` könyvtárban helyezkednek el. 
 
