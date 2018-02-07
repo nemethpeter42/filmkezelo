@@ -25,11 +25,13 @@ A front-end szerverrel JSON formátumba csomagolt JavaScript objektumokkal kommu
 + törlés
 	* az összes táblára van végpont
 
-A szkript fájlok a `public` könyvtárban helyezkednek el. 
+A szkript fájlok a `routes/` könyvtárban helyezkednek el. 
 
 ## Front-end
 
+Az Angular.js framework-öt használó front-end 
 
+A front-end szerver fájljai a `public/` könyvtárban helyezkednek el. 
 
 ## Az adatbázis visszaállítása importált adatokból
 
