@@ -59,6 +59,6 @@ A front-end szerver fájljai a `public/` könyvtárban helyezkednek el, ezen bel
 
 ## Az adatbázis visszaállítása importált adatokból
 
-Az adatbázis visszaállítása a `database.db` kitörlésével, majd a reset_db.js Node.js-sel való lefuttatásával lehetséges. Az ehhez szükséges táblanevekkel megegyező nevű CSV fájlokat az `import_data` könyvtárban kell elhelyezni.
+Az adatbázis visszaállítása a `database.db` kitörlésével, majd a `reset_db.js` Node.js-sel való lefuttatásával lehetséges. Az ehhez szükséges táblanevekkel megegyező nevű CSV fájlokat az `import_data` könyvtárban kell elhelyezni.
 
 Ez a funkció fokozott elővigyázatosságot igényel, mert könnyedén adatvesztést okozhat.
