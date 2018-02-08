@@ -30,15 +30,26 @@ A szkript fájlok a `routes/` könyvtárban helyezkednek el.
 ## Front-end
 
 Az Angular.js framework-öt használó front-end szolgálja ki a felhasználót. Jelenleg a következő funkciók állnak rendelkezésre:
-+ film létrehozása, szerkesztése, törlése
-+ film szerkesztésénél:
++ film létrehozása, kijelölése, szerkesztése, törlése, részletei
+	* a film részletei ablak a műveleti gombokon kívül eső bármely részre való kattintással jelenik meg 
++ a film **létrehozásánál** és **szerkesztésénél**
+	* megadhatunk *magyar* és *külföldi cím*et
+		- az üresen hagyott hely `NULL` értéket vesz fel az adatbázisban
+		- mindkét cím mező nem lehet üres
+	* megadhatjuk *mennyire szeretnénk megnézni* a filmet, illetve hogy *hányszor láttuk*
+		- itt praktikusságból beépített értékeket használok
+		- ezt is üresen lehet hagyni
+	* *csillagozhatjuk* a filmet 1-től 10-ig terjedő skálán
+		- törölhetjük (`NULL`-ra állíthatjuk) a csillagozást a *szemetes* ikonnal 
++ a film **részletei**nél
 	* tag-ek és tárolási helyek hozzáadása, eltávolítása listába szedett gombokkal
 		- a felvett tag-ek az alapértelmezettől eltérő színben jelennek meg a listában
 		- a népszerű tag-eket aláhúzással és félkövér betűvel kiemeli a program
 		- új tag-et vagy tárolási helyet a gomblista alatti mezőben vehetünk fel
-+
-+
-+
+	* kommentek felvétele, szerkesztése, törlése
+		- a komment típusa lehet *információ* vagy *probléma*
++ film és komment **törlés**énél figyelmeztető ablak ugrik fel
++ 
 +
 
 A front-end szerver fájljai a `public/` könyvtárban helyezkednek el, ezen belül a `filters/` tartalmazza a keresési, szűkítési és rendezési szűrőket, a `modals/` pedig a dialógusablakok sablonjait és vezérlőszkriptjeit. 
