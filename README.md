@@ -32,7 +32,7 @@ A szkript fájlok a `routes/` könyvtárban helyezkednek el.
 Az Angular.js framework-öt használó front-end szolgálja ki a felhasználót. Jelenleg a következő funkciók állnak rendelkezésre:
 + film létrehozása, kijelölése, szerkesztése, törlése, részletei
 	* a film részletei ablak a műveleti gombokon kívül eső bármely részre való kattintással jelenik meg 
-+ a film **létrehozásánál** és **szerkesztésénél**
++ a film **létrehozás**ánál és **szerkesztés**énél
 	* megadhatunk *magyar* és *külföldi cím*et
 		- az üresen hagyott hely `NULL` értéket vesz fel az adatbázisban
 		- mindkét cím mező nem lehet üres
@@ -49,13 +49,16 @@ Az Angular.js framework-öt használó front-end szolgálja ki a felhasználót.
 	* kommentek felvétele, szerkesztése, törlése
 		- a komment típusa lehet *információ* vagy *probléma*
 + film és komment **törlés**énél figyelmeztető ablak ugrik fel
-+ 
-+
++ néhány esetben lehetőségünk van kijelöléssel kötegelt (*batch*) műveleteket végrehajtani
+	* a kötegelt műveleteket a *Kijelöl* menüpont tartalmazza
++ rendezhetjük a filmeket az oszlopnevekre kattintva
+	- egyelőre csak magyar ábécé szerint
++ szürhetjük őket egyszerre akár több tulajdonság (precedencia, tag, hely, cím) alapján is
 
 A front-end szerver fájljai a `public/` könyvtárban helyezkednek el, ezen belül a `filters/` tartalmazza a keresési, szűkítési és rendezési szűrőket, a `modals/` pedig a dialógusablakok sablonjait és vezérlőszkriptjeit. 
 
 ## Az adatbázis visszaállítása importált adatokból
 
-Az adatbázis visszaállítása a `database.db` kitörlésével, majd a reset_db.js Node.js-sel való lefuttatásával lehetséges. Az ehhez szükséges táblaneveket viselő CSV fájlokat az `import_data` könyvtárban kell elhelyezni.
+Az adatbázis visszaállítása a `database.db` kitörlésével, majd a reset_db.js Node.js-sel való lefuttatásával lehetséges. Az ehhez szükséges táblanevekkel megegyező nevű CSV fájlokat az `import_data` könyvtárban kell elhelyezni.
 
 Ez a funkció fokozott elővigyázatosságot igényel, mert könnyedén adatvesztést okozhat.
